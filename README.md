@@ -1,16 +1,21 @@
-# RLM (Recursive Language Model) Agent
+# Simplified Recursive Language Model (RLM)
 
-RLM is a powerful language model agent designed for processing and analyzing large text documents with a focus on medical records and patient history. It uses recursive techniques to efficiently process text in chunks while maintaining context awareness.
+This project **(src/rlm.py)** is a simplified, easy-to-understand implementation of **[Recursive Language Models (arXiv:2512.24601)](https://arxiv.org/html/2512.24601v1)**.
 
-## Features
+> **Note:** This repository is an independent, simplified implementation designed for educational purposes and ease of understanding.
 
-- Processes large documents by breaking them into manageable chunks
-- Maintains context across document sections
-- Supports semantic search and information extraction
-- Customizable chunking and processing parameters
-- Built-in caching for improved performance
-- Comprehensive test suite with unit and integration tests
-- Pre-configured development environment with linting and formatting
+> The **official implementation** by the paper authors (Alex L. Zhang, Tim Kraska, Omar Khattab) can be found here: **[https://github.com/alexzhang13/rlm](https://github.com/alexzhang13/rlm)**.
+
+RLM allows a Large Language Model (LLM) to programmatically examine, decompose, and recursively call itself over specific snippets of a large document via a Python REPL (Read-Eval-Print Loop), effectively breaking down complex queries into manageable sub-tasks.
+
+## Technical Architecture
+
+Based on the methodology from arXiv:2512.24601, this implementation follows a recursive inference strategy that separates the "Root" planner from "Sub-Model" workers:
+
+1. **Environment Setup**: Load large documents (like patient records) into a Python REPL as a `context` variable, keeping them separate from the main model's memory.
+2. **Task Manager**: A main LLM analyzes your question and writes Python code to examine the document in parts, using techniques like text slicing or searching.
+3. **Sub-Tasks**: For complex questions, the main LLM breaks the task into smaller pieces, using helper functions to analyze specific document sections.
+4. **Combine Results**: The main LLM gathers all partial results and combines them into one final, comprehensive answer.
 
 ## Project Structure
 
@@ -78,28 +83,16 @@ result = rlm.run(
 print(result)
 ```
 
-## Testing
+## Citation
 
-The project includes a comprehensive test suite to ensure code quality and reliability.
+If you use this project in your research, please cite the original paper:
 
-### Running Tests
-
-1. Install test dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. Run the test suite:
-   ```bash
-   pytest -v
-   pytest --cov=src --cov-report=term-missing
-   pytest tests/test_rlm_environment.py -v
-   pytest -k "test_llm_query" -v
-   ```
-
-### Test Structure
-
-- `test_rlm_environment.py`: Tests for the RLM environment and core functionality
-- `test_recursive_language_model.py`: Tests for the main RLM class
-- `test_app_utils.py`: Tests for application utilities
-- `conftest.py`: Shared test fixtures and configurations
+```bibtex
+@article{zhang2025recursive,
+  title={Recursive Language Models},
+  author={Zhang, Alex L. and Kraska, Tim and Khattab, Omar},
+  journal={arXiv preprint arXiv:2512.24601},
+  year={2025},
+  url={[https://arxiv.org/abs/2512.24601](https://arxiv.org/abs/2512.24601)}
+}
+```
