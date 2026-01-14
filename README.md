@@ -12,10 +12,10 @@ RLM allows a Large Language Model (LLM) to programmatically examine, decompose, 
 
 Based on the methodology from arXiv:2512.24601, this implementation follows a recursive inference strategy that separates the "Root" planner from "Sub-Model" workers:
 
-1. **Environment Setup (The Control Plane)**: The large context (e.g., patient history) is loaded into a sandboxed Python REPL environment as a string or list variable (e.g., `context`). It is *never* passed directly to the Root LLM's context window.
-2. **Root Planner**: A "Root" LLM receives the user query and a system prompt explaining available tools. It acts as an orchestrator, writing Python code to inspect the context variable using slicing (e.g., `context[:1000]`), keyword searches, or regex matching.
-3. **Recursive Sub-Calls**: To answer complex questions, the Root LLM defines sub-tasks by slicing the context and passing these chunks to a `llm_query` (or `llm_batch` for parallel processing) function. This spawns a **Sub-Model**—which can be a smaller model instance or the same model—to process just that specific chunk.
-4. **Aggregation**: The results from these recursive sub-calls are returned to the REPL as variables. The Root LLM then reads these intermediate outputs and aggregates them into a final answer, effectively synthesizing information from across the entire document without ever seeing it all at once.
+1. **Environment Setup**: Load large documents (like patient records) into a Python REPL as a `context` variable, keeping them separate from the main model's memory.
+2. **Task Manager**: A main LLM analyzes your question and writes Python code to examine the document in parts, using techniques like text slicing or searching.
+3. **Sub-Tasks**: For complex questions, the main LLM breaks the task into smaller pieces, using helper functions to analyze specific document sections.
+4. **Combine Results**: The main LLM gathers all partial results and combines them into one final, comprehensive answer.
 
 ## Project Structure
 
