@@ -8,7 +8,7 @@ from src.app import load_context_from_file
 class TestAppUtils(unittest.TestCase):
     def test_load_context_from_file_success(self):
         # Create a temporary file with test content
-        with tempfile.NamedTemporaryFile(mode='w+', delete=False) as temp_file:
+        with tempfile.NamedTemporaryFile(mode="w+", delete=False) as temp_file:
             test_content = "This is a test file content."
             temp_file.write(test_content)
             temp_file_path = temp_file.name
@@ -30,7 +30,7 @@ class TestAppUtils(unittest.TestCase):
 
     def test_load_context_from_file_permission_error(self):
         # Create a temporary file and make it unreadable
-        with tempfile.NamedTemporaryFile(mode='w+') as temp_file:
+        with tempfile.NamedTemporaryFile(mode="w+") as temp_file:
             temp_file.write("test")
             temp_file_path = temp_file.name
             # Make the file unreadable
@@ -46,7 +46,7 @@ class TestAppUtils(unittest.TestCase):
                 os.chmod(temp_file_path, 0o644)
                 os.unlink(temp_file_path)
 
-    @patch('src.app.RecursiveLanguageModel')
+    @patch("src.app.RecursiveLanguageModel")
     def test_generate_bot_response_no_context(self, mock_rlm_class):
         from src.app import generate_bot_response
 
@@ -58,7 +58,7 @@ class TestAppUtils(unittest.TestCase):
         self.assertIn("No Context Loaded", result[0]["content"])
         mock_rlm_class.assert_not_called()
 
-    @patch('src.app.RecursiveLanguageModel')
+    @patch("src.app.RecursiveLanguageModel")
     def test_generate_bot_response_with_context(self, mock_rlm_class):
         from src.app import generate_bot_response
 
@@ -79,5 +79,5 @@ class TestAppUtils(unittest.TestCase):
         self.assertEqual(result[1]["content"], "Test response")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

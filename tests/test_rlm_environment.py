@@ -22,7 +22,7 @@ class TestRLMEnvironment(unittest.TestCase):
         self.assertIn("llm_query", self.env.globals)
         self.assertIn("FINAL", self.env.globals)
 
-    @patch('src.rlm.litellm.completion')
+    @patch("src.rlm.litellm.completion")
     def test_llm_query_success(self, mock_completion):
         # Mock the LLM response
         mock_response = MagicMock()
@@ -47,7 +47,7 @@ class TestRLMEnvironment(unittest.TestCase):
         code = "result = 2 + 2"
         result = self.env.execute(code)
         self.assertEqual(result, 4)
-        self.assertEqual(self.env.globals['result'], 4)
+        self.assertEqual(self.env.globals["result"], 4)
 
     def test_execute_with_error(self):
         code = "result = 2 + '2'"  # Type error
@@ -61,5 +61,5 @@ class TestRLMEnvironment(unittest.TestCase):
         self.assertEqual(analysis.answer, "Test answer")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
