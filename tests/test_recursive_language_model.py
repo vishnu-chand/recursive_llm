@@ -16,8 +16,8 @@ class TestRecursiveLanguageModel(unittest.TestCase):
         self.max_output_chars = 1000
         self.max_steps = 5
 
-    @patch('src.rlm.RLMEnvironment')
-    @patch('src.rlm.litellm.completion')
+    @patch("src.rlm.RLMEnvironment")
+    @patch("src.rlm.litellm.completion")
     def test_run_success(self, mock_completion, mock_rlm_env_class):
         # Setup mock environment
         mock_env = MagicMock()
@@ -26,7 +26,7 @@ class TestRecursiveLanguageModel(unittest.TestCase):
 
         # Mock the LLM response for the system prompt
         mock_response = MagicMock()
-        mock_response.choices[0].message.content = '{"thought": "Test thought", "code": "FINAL(\"Test answer\")"}'
+        mock_response.choices[0].message.content = '{"thought": "Test thought", "code": "FINAL("Test answer")"}'
         mock_completion.return_value = mock_response
 
         # Run the test
@@ -37,8 +37,8 @@ class TestRecursiveLanguageModel(unittest.TestCase):
         mock_rlm_env_class.assert_called_once()
         self.assertEqual(mock_env.execute.call_count, 2)  # One for the code, one for the exit
 
-    @patch('src.rlm.RLMEnvironment')
-    @patch('src.rlm.litellm.completion')
+    @patch("src.rlm.RLMEnvironment")
+    @patch("src.rlm.litellm.completion")
     def test_run_max_steps_reached(self, mock_completion, mock_rlm_env_class):
         # Setup mock environment to never exit
         mock_env = MagicMock()
@@ -46,20 +46,19 @@ class TestRecursiveLanguageModel(unittest.TestCase):
 
         # Mock the LLM response to not call FINAL
         mock_response = MagicMock()
-        mock_response.choices[0].message.content = '{"thought": "Test thought", "code": "print(\"Test\")"}'
+        mock_response.choices[0].message.content = '{"thought": "Test thought", "code": "print("Test")"}'
         mock_completion.return_value = mock_response
 
         # Run the test with max_steps=1
         with self.assertRaises(RuntimeError) as context:
-            self.rlm.run(context=self.context, messages=self.messages, max_chunk_size=self.max_chunk_size, max_output_chars=self.max_output_chars, max_steps=1  # Will exit after 1 step without FINAL
-                         )
+            self.rlm.run(context=self.context, messages=self.messages, max_chunk_size=self.max_chunk_size, max_output_chars=self.max_output_chars, max_steps=1)  # Will exit after 1 step without FINAL
 
         # Verify the error message
         self.assertIn("Maximum number of steps reached", str(context.exception))
         self.assertEqual(mock_env.execute.call_count, 1)
 
-    @patch('src.rlm.RLMEnvironment')
-    @patch('src.rlm.litellm.completion')
+    @patch("src.rlm.RLMEnvironment")
+    @patch("src.rlm.litellm.completion")
     def test_run_with_invalid_json_response(self, mock_completion, mock_rlm_env_class):
         # Setup mock environment
         mock_env = MagicMock()
@@ -67,7 +66,7 @@ class TestRecursiveLanguageModel(unittest.TestCase):
 
         # Mock the LLM response with invalid JSON
         mock_response = MagicMock()
-        mock_response.choices[0].message.content = 'Invalid JSON'
+        mock_response.choices[0].message.content = "Invalid JSON"
         mock_completion.return_value = mock_response
 
         # Run the test
@@ -77,8 +76,8 @@ class TestRecursiveLanguageModel(unittest.TestCase):
         # Verify the error message
         self.assertIn("Failed to parse LLM response as JSON", str(context.exception))
 
-    @patch('src.rlm.RLMEnvironment')
-    @patch('src.rlm.litellm.completion')
+    @patch("src.rlm.RLMEnvironment")
+    @patch("src.rlm.litellm.completion")
     def test_run_with_missing_fields_in_response(self, mock_completion, mock_rlm_env_class):
         # Setup mock environment
         mock_env = MagicMock()
@@ -97,5 +96,5 @@ class TestRecursiveLanguageModel(unittest.TestCase):
         self.assertIn("Missing required fields in LLM response", str(context.exception))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

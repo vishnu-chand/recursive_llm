@@ -16,7 +16,7 @@ def get_logger(name):
             record.location = f"{record.filename[:12]}:{record.funcName[:12]}:{record.lineno}"
             output = super().format(record)
             header = output.split(record.message)[0]
-            return output.replace('\n', '\n' + header)
+            return output.replace("\n", "\n" + header)
 
     logger = logging.getLogger(name)
     if logger.hasHandlers():
@@ -24,7 +24,7 @@ def get_logger(name):
     logger.propagate = False
 
     handler = logging.StreamHandler()
-    handler.setFormatter(MultiLineFormatter(fmt='[%(levelname).1s %(asctime)s | %(location)-30s] %(message)s', datefmt='%y-%m-%d %H:%M:%S'))
+    handler.setFormatter(MultiLineFormatter(fmt="[%(levelname).1s %(asctime)s | %(location)-30s] %(message)s", datefmt="%y-%m-%d %H:%M:%S"))
     logger.addHandler(handler)
     return logger
 
@@ -42,14 +42,14 @@ You are an inference-time algorithm capable of processing infinite text by treat
 - `FINAL(answer)`: Submits the final answer and exits. Every code should call FINAL.
 - `print(val)`: Standard output for debugging logic.
 - Max Chunk Size: {max_chunk_size}
-- Max Output Chars: {max_output_chars} 
+- Max Output Chars: {max_output_chars}
 - Context Size: Context has {context_size} chars
-- Context Sample: 
+- Context Sample:
     {context_sample}...
 
 **CORE PHILOSOPHY:**
 1. **Semantic Expansion (Broad Search):** Do not just search for words present in the user query. Decompose the user's intent into a list of "weakly related" keywords, proxies, dates, or technical concepts that *might* appear in the text.
-2. **Iterative Narrowing:** 
+2. **Iterative Narrowing:**
    - Start with a broad set of keywords.
    - Do smart pre-processing or chunking.
    - Use `llm_query` on chunks/snippets to filter and extract details relevant to query.
@@ -88,7 +88,7 @@ relevant_findings = set()
 for i in range(0, len(CONTEXT), chunk_size - overlap):
     # Slice a specific window
     snippet = CONTEXT[i : i + chunk_size]
-    
+
     # Pre-filter: Only process chunks that contain valid terms
     if any(re.search(re.escape(term), snippet, re.IGNORECASE) for term in proxies):
         # 3. EXTRACT via Sub-Agent
@@ -118,11 +118,11 @@ chunk_summaries = []
 # 2. MAP (Process Chunks)
 for i in range(0, len(CONTEXT), chunk_size):
     snippet = CONTEXT[i : i + chunk_size]
-    
+
     # Skip empty or noise chunks
     if len(snippet.strip()) < 50:
         continue
-        
+
     # Compress the chunk into a key point
     mini_sum = llm_query("Extract key medical events and dates from this section. Be brief.", snippet)
     if mini_sum:
@@ -160,13 +160,13 @@ def disp_messages(messages):
     logger.info(f"_______________________________________________________________")
     for m in messages[1:]:
         logger.info(f"******************************************************************")
-        role, content = m['role'], m['content']
+        role, content = m["role"], m["content"]
         try:
             content = json.loads(content)
             logger.info(f"[ASSISTANT THOUGHT]")
-            logger.info(content['thought'])
+            logger.info(content["thought"])
             logger.info(f"[ASSISTANT CODE]")
-            logger.info(content['code'])
+            logger.info(content["code"])
         except:
             logger.info(f"[{role.upper()}]")
             logger.info(content)
@@ -188,7 +188,15 @@ class RLMEnvironment:
         self.context = context
         self.model_name = model_name
         self.max_output_chars = max_output_chars
-        self.globals = {"CONTEXT": context, "llm_query": self.llm_query, "FINAL": self.final, "print": print, "len": len, "range": range, "enumerate": enumerate, }
+        self.globals = {
+            "CONTEXT": context,
+            "llm_query": self.llm_query,
+            "FINAL": self.final,
+            "print": print,
+            "len": len,
+            "range": range,
+            "enumerate": enumerate,
+        }
 
     def llm_query(self, prompt, context_snippet):
         content = sub_agent_prompt.format(prompt=prompt, context_snippet=context_snippet)
@@ -196,7 +204,7 @@ class RLMEnvironment:
         content = response.choices[0].message.content
         analysis = SnippetAnalysis.model_validate_json(content)
         output = analysis.model_dump()
-        output = output['answer'] if output['is_relevant'] else ''
+        output = output["answer"] if output["is_relevant"] else ""
         return output
 
     def final(self, answer):
@@ -210,7 +218,7 @@ class RLMEnvironment:
             exec(code, self.globals)
         output = buffer.getvalue()
         if len(output) > self.max_output_chars:
-            output = output[:self.max_output_chars] + f"\n... [Output truncated. Length: {len(output)}]"
+            output = output[: self.max_output_chars] + f"\n... [Output truncated. Length: {len(output)}]"
         return output
 
 
@@ -240,7 +248,7 @@ class RecursiveLanguageModel:
 
 
 def run_rlm():
-    with open('../data/synthetic_patient_data.md', 'r') as book:
+    with open("../data/synthetic_patient_data.md", "r") as book:
         patient_history = book.read()
 
     rlm = RecursiveLanguageModel("gemini/gemini-2.5-flash")

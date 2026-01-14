@@ -6,8 +6,8 @@ from rlm import RecursiveLanguageModel, get_logger
 
 logger = get_logger("APP")
 logger.setLevel(logging.INFO)
-os.environ['no_proxy'] = '127.0.0.1,localhost'
-os.environ['NO_PROXY'] = '127.0.0.1,localhost'
+os.environ["no_proxy"] = "127.0.0.1,localhost"
+os.environ["NO_PROXY"] = "127.0.0.1,localhost"
 
 SCREEN_WIDTH = 1440
 SCREEN_HEIGHT = 980
@@ -61,7 +61,21 @@ def create_chat_interface():
 
 def create_sidebar_components():
     gr.Markdown("### ⚙️ Settings")
-    model_input = gr.Dropdown(choices=["gemini/gemini-2.5-flash-lite", "gemini/gemini-2.5-flash", "gemini/gemini-2.5-pro", "gemini/gemini-3-pro-preview", "anthropic/claude-3-opus-20240229", "openai/gpt-4-turbo-preview", "openai/gpt-4", ], value="gemini/gemini-2.5-flash", allow_custom_value=True, label="Model Name", info="Select or type model name.")
+    model_input = gr.Dropdown(
+        choices=[
+            "gemini/gemini-2.5-flash-lite",
+            "gemini/gemini-2.5-flash",
+            "gemini/gemini-2.5-pro",
+            "gemini/gemini-3-pro-preview",
+            "anthropic/claude-3-opus-20240229",
+            "openai/gpt-4-turbo-preview",
+            "openai/gpt-4",
+        ],
+        value="gemini/gemini-2.5-flash",
+        allow_custom_value=True,
+        label="Model Name",
+        info="Select or type model name.",
+    )
     gr.Markdown("### 📚 Context")
     gr.Markdown("Upload a document or paste text.")
 

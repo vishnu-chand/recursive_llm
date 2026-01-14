@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 # This file is used to define fixtures and other test configurations
 # that will be available to all tests in the test suite.
 
+
 @pytest.fixture
 def mock_llm_response():
     """Fixture that provides a mock LLM response."""
@@ -31,6 +32,10 @@ def sample_context():
 @pytest.fixture
 def sample_messages():
     """Fixture that provides sample chat messages for testing."""
-    return [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "What is the test about?"}]
+    return [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "What is the test about?"},
+    ]
+
 
 # Add any additional fixtures here
