@@ -1,6 +1,9 @@
-# Simplified Recursive Language Model (RLM) Implementation
+# Simplified Recursive Language Model (RLM)
 
-This project is a simplified, easy-to-understand implementation of **[Recursive Language Models (arXiv:2512.24601)](https://arxiv.org/html/2512.24601v1)**. It demonstrates the core concept of utilizing inference-time scaling to handle potentially infinite context lengths by treating text as an external environment rather than filling the context window.
+This project **(src/rlm.py)** is a simplified, easy-to-understand implementation of **[Recursive Language Models (arXiv:2512.24601)](https://arxiv.org/html/2512.24601v1)**. It demonstrates the core concept of utilizing inference-time scaling to handle potentially infinite context lengths by treating text as an external environment rather than filling the context window.
+
+> **Note:** This repository is an independent, simplified implementation designed for educational purposes and ease of understanding.
+> The **official implementation** by the paper authors (Alex L. Zhang, Tim Kraska, Omar Khattab) can be found here: **[https://github.com/alexzhang13/rlm](https://github.com/alexzhang13/rlm)**.
 
 RLM allows a Large Language Model (LLM) to programmatically examine, decompose, and recursively call itself over specific snippets of a large document via a Python REPL (Read-Eval-Print Loop), effectively breaking down complex queries into manageable sub-tasks.
 
@@ -86,4 +89,18 @@ result = rlm.run(
 )
 
 print(result)
+```
+
+## Citation
+
+If you use this project in your research, please cite the original paper:
+
+```bibtex
+@article{zhang2025recursive,
+  title={Recursive Language Models},
+  author={Zhang, Alex L. and Kraska, Tim and Khattab, Omar},
+  journal={arXiv preprint arXiv:2512.24601},
+  year={2025},
+  url={[https://arxiv.org/abs/2512.24601](https://arxiv.org/abs/2512.24601)}
+}
 ```
